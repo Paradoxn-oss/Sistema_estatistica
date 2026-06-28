@@ -1,0 +1,92 @@
+{
+  "jogo": {
+    "casa": "Germany",
+    "fora": "Paraguay"
+  },
+  "odds": {
+    "casa_de_apostas_consultadas": 25,
+    "odd_media_casa": 1.36,
+    "odd_media_fora": 8.93,
+    "odd_media_empate": 5.07,
+    "odd_media_over_2_5": 1.71,
+    "odd_media_under_2_5": 2.17
+  },
+  "forma_recente": {
+    "Germany": {
+      "resumo": {
+        "count": 3,
+        "competitions": "WC",
+        "first": "2026-06-14",
+        "last": "2026-06-25",
+        "played": 3,
+        "wins": 3,
+        "draws": 0,
+        "losses": 1
+      },
+      "jogos": [
+        {
+          "data": "2026-06-14",
+          "competicao": "FIFA World Cup",
+          "casa": "Germany",
+          "fora": "Curaçao",
+          "placar_casa": 7,
+          "placar_fora": 1
+        },
+        {
+          "data": "2026-06-20",
+          "competicao": "FIFA World Cup",
+          "casa": "Germany",
+          "fora": "Ivory Coast",
+          "placar_casa": 2,
+          "placar_fora": 1
+        },
+        {
+          "data": "2026-06-25",
+          "competicao": "FIFA World Cup",
+          "casa": "Ecuador",
+          "fora": "Germany",
+          "placar_casa": 2,
+          "placar_fora": 1
+        }
+      ]
+    },
+    "Paraguay": {
+      "resumo": {
+        "count": 3,
+        "competitions": "WC",
+        "first": "2026-06-13",
+        "last": "2026-06-26",
+        "played": 3,
+        "wins": 1,
+        "draws": 1,
+        "losses": 1
+      },
+      "jogos": [
+        {
+          "data": "2026-06-13",
+          "competicao": "FIFA World Cup",
+          "casa": "United States",
+          "fora": "Paraguay",
+          "placar_casa": 4,
+          "placar_fora": 1
+        },
+        {
+          "data": "2026-06-20",
+          "competicao": "FIFA World Cup",
+          "casa": "Turkey",
+          "fora": "Paraguay",
+          "placar_casa": 0,
+          "placar_fora": 1
+        },
+        {
+          "data": "2026-06-26",
+          "competicao": "FIFA World Cup",
+          "casa": "Paraguay",
+          "fora": "Australia",
+          "placar_casa": 0,
+          "placar_fora": 0
+        }
+      ]
+    }
+  }
+}

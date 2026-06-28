@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Analisador de Jogos — Copa 2026</title>
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+  <div class="container">
+
+    <div class="cabecalho">
+      <div class="eyebrow">Copa do mundo 2026</div>
+      <h1>Analisador de Jogos</h1>
+    </div>
+
+    {% if erro %}
+      <div class="erro">{{ erro }}</div>
+    {% endif %}
+
+    {% if not relatorio %}
+      <div class="lista-jogos">
+        {% for jogo in jogos %}
+          <a class="jogo-card" href="{{ url_for('ver_jogo', time_casa=jogo.casa, time_fora=jogo.fora) }}">
+            <span class="jc-data">{{ jogo.data_formatada }}</span>
+            <span class="jc-confronto">{{ jogo.casa }} <span class="jc-vs">x</span> {{ jogo.fora }}</span>
+          </a>
+        {% endfor %}
+
+        {% if not jogos %}
+          <div class="dica">Nenhum jogo futuro encontrado no momento.</div>
+        {% endif %}
+      </div>
+    {% endif %}
+
+    {% if relatorio %}
+      <a class="voltar-link" href="{{ url_for('index') }}">&larr; voltar para a lista de jogos</a>
+
+      <div class="placar-titulo">{{ relatorio.casa }}<span class="vs">x</span>{{ relatorio.fora }}</div>
+
+      <div class="odds-painel">
+        <div class="odds-painel-titulo">Odds de mercado (média)</div>
+        {% if relatorio.odds %}
+          <div class="odds-grade">
+            <div class="odd-item">
+              <div class="odd-valor">{{ "%.2f"|format(relatorio.odds.odd_media_casa) if relatorio.odds.odd_media_casa else "—" }}</div>
+              <div class="odd-label">{{ relatorio.casa }}</div>
+            </div>
+            <div class="odd-item">
+              <div class="odd-valor">{{ "%.2f"|format(relatorio.odds.odd_media_empate) if relatorio.odds.odd_media_empate else "—" }}</div>
+              <div class="odd-label">empate</div>
+            </div>
+            <div class="odd-item">
+              <div class="odd-valor">{{ "%.2f"|format(relatorio.odds.odd_media_fora) if relatorio.odds.odd_media_fora else "—" }}</div>
+              <div class="odd-label">{{ relatorio.fora }}</div>
+            </div>
+          </div>
+          <div class="odds-rodape">
+            <span>over 2.5: {{ "%.2f"|format(relatorio.odds.odd_media_over_2_5) if relatorio.odds.odd_media_over_2_5 else "—" }}</span>
+            <span>under 2.5: {{ "%.2f"|format(relatorio.odds.odd_media_under_2_5) if relatorio.odds.odd_media_under_2_5 else "—" }}</span>
+            <span>{{ relatorio.odds.casa_de_apostas_consultadas }} casas consultadas</span>
+          </div>
+        {% else %}
+          <div class="dica">Odds não disponíveis para este jogo.</div>
+        {% endif %}
+      </div>
+
+      <div class="times-grade">
+        {% for nome_time, dados in relatorio.forma.items() %}
+          <div class="time-bloco">
+            <div class="time-nome">{{ nome_time }}</div>
+            <div class="time-resumo">{{ dados.resumo.wins }}V {{ dados.resumo.draws }}E {{ dados.resumo.losses }}D</div>
+            <div class="forma-linha">
+              {% for jogo, resultado in dados.forma_classificada %}
+                {% if resultado == "V" %}
+                  <span class="forma-bolinha" style="background:#3B8C5A">V</span>
+                {% elif resultado == "E" %}
+                  <span class="forma-bolinha" style="background:#D9A23B">E</span>
+                {% else %}
+                  <span class="forma-bolinha" style="background:#B23A3A">D</span>
+                {% endif %}
+              {% endfor %}
+            </div>
+            <div class="jogos-lista">
+              {% for jogo in dados.jogos %}
+                <div class="jogo-recente">
+                  <span class="jr-data">{{ jogo.data[8:10] }}/{{ jogo.data[5:7] }}</span>
+                  <span>{{ jogo.casa }} {{ jogo.placar_casa }} x {{ jogo.placar_fora }} {{ jogo.fora }}</span>
+                </div>
+              {% endfor %}
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+    {% endif %}
+
+    <div class="rodape-nota">Dados de odds e forma recente buscados em tempo real · não constitui recomendação de aposta</div>
+
+  </div>
+</body>
+</html>
