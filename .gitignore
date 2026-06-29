@@ -2,6 +2,7 @@ __pycache__/
 *.pyc
 *.pyo
 *.pyd
+dados_cache.json
 
 venv/
 .venv/
@@ -21,3 +22,4 @@ dist/
 build/
 
 *.log
+

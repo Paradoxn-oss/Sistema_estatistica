@@ -14,6 +14,12 @@
       <h1>Analisador de Jogos</h1>
     </div>
 
+    {% if atualizado_em %}
+      <div class="dica" style="text-align:center; margin-bottom: 20px;">
+        Dados atualizados em: {{ atualizado_em[:16] }} (UTC)
+      </div>
+    {% endif %}
+
     {% if erro %}
       <div class="erro">{{ erro }}</div>
     {% endif %}
@@ -23,7 +29,15 @@
         {% for jogo in jogos %}
           <a class="jogo-card" href="{{ url_for('ver_jogo', time_casa=jogo.casa, time_fora=jogo.fora) }}">
             <span class="jc-data">{{ jogo.data_formatada }}</span>
-            <span class="jc-confronto">{{ jogo.casa }} <span class="jc-vs">x</span> {{ jogo.fora }}</span>
+            <span class="jc-confronto">
+              {% if jogo.crest_casa %}
+                <img src="{{ jogo.crest_casa }}" alt="" class="brasao-card">
+              {% endif %}
+              {{ jogo.casa }} <span class="jc-vs">x</span> {{ jogo.fora }}
+              {% if jogo.crest_fora %}
+                <img src="{{ jogo.crest_fora }}" alt="" class="brasao-card">
+              {% endif %}
+            </span>
           </a>
         {% endfor %}
 
@@ -36,7 +50,17 @@
     {% if relatorio %}
       <a class="voltar-link" href="{{ url_for('index') }}">&larr; voltar para a lista de jogos</a>
 
-      <div class="placar-titulo">{{ relatorio.casa }}<span class="vs">x</span>{{ relatorio.fora }}</div>
+      <div class="placar-titulo">
+        {% if relatorio.crest_casa %}
+          <img src="{{ relatorio.crest_casa }}" alt="{{ relatorio.casa }}" class="brasao-placar">
+        {% endif %}
+        {{ relatorio.casa }}
+        <span class="vs">x</span>
+        {{ relatorio.fora }}
+        {% if relatorio.crest_fora %}
+          <img src="{{ relatorio.crest_fora }}" alt="{{ relatorio.fora }}" class="brasao-placar">
+        {% endif %}
+      </div>
 
       <div class="odds-painel">
         <div class="odds-painel-titulo">Odds de mercado (média)</div>

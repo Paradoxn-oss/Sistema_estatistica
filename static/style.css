@@ -243,3 +243,17 @@ h1 {
     gap: 4px;
   }
 }
+.brasao-placar {
+  width: 32px;
+  height: 32px;
+  object-fit: contain;
+  vertical-align: middle;
+  margin: 0 8px;
+}
+.brasao-card {
+  width: 20px;
+  height: 20px;
+  object-fit: contain;
+  vertical-align: middle;
+  margin: 0 4px;
+}

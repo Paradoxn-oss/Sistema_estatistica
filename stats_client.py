@@ -6,21 +6,30 @@ BASE_URL = "https://api.football-data.org/v4"
 HEADERS = {"X-Auth-Token": FOOTBALL_API_KEY}
 
 
-def buscar_id_time(nome_time):
+def buscar_todos_os_times():
     """
-    Busca o ID de um time da Copa do Mundo pelo nome (em inglês).
-    Retorna o ID ou None se não encontrar.
+    Busca a lista completa dos 48 times da Copa, uma única vez.
+    Deve ser chamada uma vez no início do script, e o resultado
+    reaproveitado para todos os times -- evita repetir essa chamada
+    cara (48 times) para cada jogo.
     """
     response = requests.get(f"{BASE_URL}/competitions/WC/teams", headers=HEADERS)
     response.raise_for_status()
-    times = response.json()["teams"]
+    return response.json()["teams"]
 
+
+def encontrar_time_na_lista(times, nome_time):
+    """
+    Procura um time específico dentro de uma lista já carregada
+    (vinda de buscar_todos_os_times()), sem fazer nenhuma chamada de API.
+    Retorna (id, nome, crest_url) ou (None, None, None).
+    """
     nome_busca = nome_time.lower()
     for time in times:
         if nome_busca in time["name"].lower():
-            return time["id"], time["name"]
+            return time["id"], time["name"], time.get("crest")
 
-    return None, None
+    return None, None, None
 
 
 def buscar_forma_recente(team_id, quantidade=5):
