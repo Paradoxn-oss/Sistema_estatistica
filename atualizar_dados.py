@@ -1,20 +1,20 @@
-import json
 import time
 from datetime import datetime, timedelta, timezone
 
-from odds_client import buscar_odds_copa, encontrar_jogo, resumir_odds
-from stats_client import (
+from persistence.repositorio import salvar_cache
+from clients.odds_client import buscar_odds_copa
+from domain.estatisticas import calcular_estatisticas_gols, resultado_jogo, resumir_odds
+from clients.stats_client import (
     buscar_todos_os_times,
     encontrar_time_na_lista,
     buscar_forma_recente,
-    calcular_estatisticas_gols,
     buscar_id_jogo_copa,
     buscar_head2head,
 )
 
-JANELA_HORAS = 30
+JANELA_HORAS = 24
 ARQUIVO_SAIDA = "dados_cache.json"
-PAUSA_ENTRE_JOGOS_SEGUNDOS = 7  # margem de segurança para o rate limit de 10/min
+PAUSA_ENTRE_JOGOS_SEGUNDOS = 25  # margem de segurança para o rate limit de 10/min
 
 
 def formatar_data_jogo(commence_time_iso):
@@ -140,9 +140,8 @@ def main():
         "jogos": relatorios,
     }
 
-    with open(ARQUIVO_SAIDA, "w", encoding="utf-8") as f:
-        json.dump(saida, f, ensure_ascii=False, indent=2)
-
+    salvar_cache(saida)
+    
     print(f"\nConcluído. {len(relatorios)} jogo(s) salvos em {ARQUIVO_SAIDA}")
 
 

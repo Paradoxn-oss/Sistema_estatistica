@@ -1,47 +1,45 @@
-import requests
-from config import ODDS_API_KEY
-
-BASE_URL = "https://api.the-odds-api.com/v4/sports/soccer_fifa_world_cup/odds"
-
-def buscar_odds_copa(regions="eu", markets="h2h,totals"):
-    """
-    Busca odds de todos os jogos disponíveis da Copa do Mundo 2026.
-    Retorna a lista de jogos (cada um com seus bookmakers e mercados).
-    """
-    params = {
-        "regions": regions,
-        "markets": markets,
-        "oddsFormat": "decimal",
-        "apiKey": ODDS_API_KEY,
-    }
-
-    response = requests.get(BASE_URL, params=params)
-    response.raise_for_status()  # lança erro se status != 200
-
-    return response.json()
-
-
-def encontrar_jogo(jogos, time_casa, time_visitante):
-    """
-    Filtra a lista de jogos para encontrar um confronto específico.
-    Busca de forma flexível (case-insensitive, parcial).
-    """
-    time_casa = time_casa.lower()
-    time_visitante = time_visitante.lower()
+def calcular_estatisticas_gols(jogos, nome_time):
+    gols_marcados = 0
+    gols_sofridos = 0
+    clean_sheets = 0
 
     for jogo in jogos:
-        home = jogo["home_team"].lower()
-        away = jogo["away_team"].lower()
-        if (time_casa in home and time_visitante in away) or \
-           (time_casa in away and time_visitante in home):
-            return jogo
+        if jogo["casa"] == nome_time:
+            marcados, sofridos = jogo["placar_casa"], jogo["placar_fora"]
+        else:
+            marcados, sofridos = jogo["placar_fora"], jogo["placar_casa"]
 
-    return None
+        gols_marcados += marcados
+        gols_sofridos += sofridos
+        if sofridos == 0:
+            clean_sheets += 1
+
+    total_jogos = len(jogos)
+    media_marcados = round(gols_marcados / total_jogos, 2) if total_jogos else 0
+    media_sofridos = round(gols_sofridos / total_jogos, 2) if total_jogos else 0
+
+    return {
+        "gols_marcados": gols_marcados,
+        "gols_sofridos": gols_sofridos,
+        "media_marcados": media_marcados,
+        "media_sofridos": media_sofridos,
+        "clean_sheets": clean_sheets,
+    }
+
+
+def resultado_jogo(jogo, nome_time):
+    if jogo["casa"] == nome_time:
+        gols_time, gols_adv = jogo["placar_casa"], jogo["placar_fora"]
+    else:
+        gols_time, gols_adv = jogo["placar_fora"], jogo["placar_casa"]
+
+    if gols_time > gols_adv:
+        return "V"
+    elif gols_time < gols_adv:
+        return "D"
+    return "E"
 
 def resumir_odds(jogo):
-    """
-    Calcula a média do moneyline e do over/under entre todas as casas.
-    """
     if not jogo:
         return None
 

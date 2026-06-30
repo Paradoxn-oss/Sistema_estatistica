@@ -15,26 +15,10 @@ Fluxo de uso:
 Sempre que quiser dados mais recentes, rode o passo 1 de novo.
 """
 
-import json
-import os
 from flask import Flask, render_template
+from persistence.repositorio import carregar_cache
 
 app = Flask(__name__)
-
-ARQUIVO_CACHE = "dados_cache.json"
-
-
-def carregar_cache():
-    """
-    Lê o dados_cache.json do disco. Se o arquivo não existir ainda
-    (porque atualizar_dados.py nunca rodou), devolve uma estrutura vazia
-    em vez de quebrar a página.
-    """
-    if not os.path.exists(ARQUIVO_CACHE):
-        return {"atualizado_em": None, "jogos": []}
-
-    with open(ARQUIVO_CACHE, "r", encoding="utf-8") as f:
-        return json.load(f)
 
 
 def encontrar_jogo_no_cache(jogos, time_casa, time_fora):
