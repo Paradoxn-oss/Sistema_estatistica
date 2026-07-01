@@ -18,7 +18,7 @@ from clients.stats_client import (
     buscar_head2head,
 )
 
-JANELA_HORAS = 5
+JANELA_HORAS = 24
 ARQUIVO_SAIDA = "dados_cache.json"
 PAUSA_ENTRE_JOGOS_SEGUNDOS = 25  # margem de segurança para o rate limit de 10/min
 
