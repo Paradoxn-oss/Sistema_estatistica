@@ -8,8 +8,8 @@ Aplicação web em Python/Flask para análise de confrontos da Copa do Mundo 202
 
 > Cards de jogos → relatório completo com odds, forma recente, estatísticas e desempenho por mando de campo.
 
-assets/Interface 01.png
-assets/Interface 02.png
+![Interface 01](assets/interface_01.png)
+![Interface 02](assets/interface_02.png)
 
 ---
 
