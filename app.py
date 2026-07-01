@@ -1,20 +1,3 @@
-"""
-app.py
-
-Aplicação Flask local para o analisador de jogos da Copa do Mundo.
-
-Diferente da versão anterior, este app NUNCA chama as APIs externas.
-Ele só lê o arquivo dados_cache.json, que é gerado separadamente pelo
-script atualizar_dados.py.
-
-Fluxo de uso:
-    1. Rode "python atualizar_dados.py" (gera/atualiza o dados_cache.json)
-    2. Rode "python app.py" (serve o site, lendo só o arquivo)
-    3. Abra http://localhost:5000
-
-Sempre que quiser dados mais recentes, rode o passo 1 de novo.
-"""
-
 from flask import Flask, render_template
 from persistence.repositorio import carregar_cache
 

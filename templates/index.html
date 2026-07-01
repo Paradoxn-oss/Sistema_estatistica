@@ -62,6 +62,7 @@
         {% endif %}
       </div>
 
+      <!-- ODDS -->
       <div class="odds-painel">
         <div class="odds-painel-titulo">Odds de mercado (média)</div>
         {% if relatorio.odds %}
@@ -89,11 +90,13 @@
         {% endif %}
       </div>
 
+      <!-- FORMA RECENTE -->
+      <div class="secao-titulo">Forma Recente</div>
       <div class="times-grade">
         {% for nome_time, dados in relatorio.forma.items() %}
           <div class="time-bloco">
             <div class="time-nome">{{ nome_time }}</div>
-            <div class="time-resumo">{{ dados.resumo.wins }}V {{ dados.resumo.draws }}E {{ dados.resumo.losses }}D</div>
+
             <div class="forma-linha">
               {% for jogo, resultado in dados.forma_classificada %}
                 {% if resultado == "V" %}
@@ -105,6 +108,50 @@
                 {% endif %}
               {% endfor %}
             </div>
+
+            {% if dados.forma_expandida %}
+              <div class="forma-stats-grade">
+                <div class="forma-stat">
+                  <span class="fs-valor">{{ dados.stats_gols.gols_marcados }}</span>
+                  <span class="fs-label">gols marcados</span>
+                </div>
+                <div class="forma-stat">
+                  <span class="fs-valor">{{ dados.stats_gols.gols_sofridos }}</span>
+                  <span class="fs-label">gols sofridos</span>
+                </div>
+                <div class="forma-stat">
+                  <span class="fs-valor">{{ dados.stats_gols.media_marcados }}</span>
+                  <span class="fs-label">média marcados</span>
+                </div>
+                <div class="forma-stat">
+                  <span class="fs-valor">{{ dados.stats_gols.media_sofridos }}</span>
+                  <span class="fs-label">média sofridos</span>
+                </div>
+                <div class="forma-stat">
+                  <span class="fs-valor">{{ dados.stats_gols.clean_sheets }}</span>
+                  <span class="fs-label">clean sheets</span>
+                </div>
+                <div class="forma-stat">
+                  <span class="fs-valor">{{ dados.forma_expandida.jogos_sem_marcar }}</span>
+                  <span class="fs-label">jogos sem marcar</span>
+                </div>
+              </div>
+
+              {% if dados.forma_expandida.sequencia_atual %}
+                <div class="sequencia-bloco">
+                  sequência atual:
+                  {% set seq = dados.forma_expandida.sequencia_atual %}
+                  {% if seq[0] == "V" %}
+                    <span class="seq-badge verde">{{ seq|length }}V seguidas</span>
+                  {% elif seq[0] == "E" %}
+                    <span class="seq-badge amarelo">{{ seq|length }}E seguidos</span>
+                  {% else %}
+                    <span class="seq-badge vermelho">{{ seq|length }}D seguidas</span>
+                  {% endif %}
+                </div>
+              {% endif %}
+            {% endif %}
+
             <div class="jogos-lista">
               {% for jogo in dados.jogos %}
                 <div class="jogo-recente">
@@ -116,6 +163,54 @@
           </div>
         {% endfor %}
       </div>
+
+      <!-- MANDANTE & VISITANTE -->
+      <div class="secao-titulo">Mandante &amp; Visitante</div>
+      <div class="times-grade">
+        {% for nome_time, dados in relatorio.forma.items() %}
+          {% if dados.mando %}
+            <div class="time-bloco">
+              <div class="time-nome">{{ nome_time }}</div>
+
+              <div class="mando-grade">
+                <div class="mando-bloco">
+                  <div class="mando-label">🏠 Mandante</div>
+                  {% set m = dados.mando.mandante %}
+                  {% if m.jogos > 0 %}
+                    <div class="mando-stats">
+                      <span class="verde">{{ m.vitorias }}V</span>
+                      <span class="amarelo">{{ m.empates }}E</span>
+                      <span class="vermelho">{{ m.derrotas }}D</span>
+                    </div>
+                    <div class="mando-gols">{{ m.gols_marcados }} gols marcados · {{ m.gols_sofridos }} sofridos</div>
+                    <div class="mando-media">média: {{ m.media_marcados }} / {{ m.media_sofridos }}</div>
+                  {% else %}
+                    <div class="dica">Nenhum jogo como mandante nos últimos 5.</div>
+                  {% endif %}
+                </div>
+
+                <div class="mando-bloco">
+                  <div class="mando-label">✈️ Visitante</div>
+                  {% set v = dados.mando.visitante %}
+                  {% if v.jogos > 0 %}
+                    <div class="mando-stats">
+                      <span class="verde">{{ v.vitorias }}V</span>
+                      <span class="amarelo">{{ v.empates }}E</span>
+                      <span class="vermelho">{{ v.derrotas }}D</span>
+                    </div>
+                    <div class="mando-gols">{{ v.gols_marcados }} gols marcados · {{ v.gols_sofridos }} sofridos</div>
+                    <div class="mando-media">média: {{ v.media_marcados }} / {{ v.media_sofridos }}</div>
+                  {% else %}
+                    <div class="dica">Nenhum jogo como visitante nos últimos 5.</div>
+                  {% endif %}
+                </div>
+              </div>
+
+            </div>
+          {% endif %}
+        {% endfor %}
+      </div>
+
     {% endif %}
 
     <div class="rodape-nota">Dados de odds e forma recente buscados em tempo real · não constitui recomendação de aposta</div>

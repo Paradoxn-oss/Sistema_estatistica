@@ -1,4 +1,3 @@
-# stats_client.py
 import requests
 from config import FOOTBALL_API_KEY
 from domain.estatisticas import calcular_estatisticas_gols, resultado_jogo

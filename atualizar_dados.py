@@ -3,7 +3,13 @@ from datetime import datetime, timedelta, timezone
 
 from persistence.repositorio import salvar_cache
 from clients.odds_client import buscar_odds_copa
-from domain.estatisticas import calcular_estatisticas_gols, resultado_jogo, resumir_odds
+from domain.estatisticas import (
+    calcular_estatisticas_gols,
+    resultado_jogo,
+    resumir_odds,
+    calcular_forma_expandida,
+    calcular_mandante_visitante,  # <- adicione
+)
 from clients.stats_client import (
     buscar_todos_os_times,
     encontrar_time_na_lista,
@@ -12,7 +18,7 @@ from clients.stats_client import (
     buscar_head2head,
 )
 
-JANELA_HORAS = 24
+JANELA_HORAS = 5
 ARQUIVO_SAIDA = "dados_cache.json"
 PAUSA_ENTRE_JOGOS_SEGUNDOS = 25  # margem de segurança para o rate limit de 10/min
 
@@ -46,20 +52,6 @@ def listar_jogos_proximos():
     jogos.sort(key=lambda j: j["commence_time"])
     return jogos
 
-
-def resultado_jogo(jogo, nome_time):
-    if jogo["casa"] == nome_time:
-        gols_time, gols_adv = jogo["placar_casa"], jogo["placar_fora"]
-    else:
-        gols_time, gols_adv = jogo["placar_fora"], jogo["placar_casa"]
-
-    if gols_time > gols_adv:
-        return "V"
-    elif gols_time < gols_adv:
-        return "D"
-    return "E"
-
-
 def montar_relatorio_completo(jogo_lista, todos_os_times, qtd_jogos=5):
     time_casa_en = jogo_lista["casa"]
     time_fora_en = jogo_lista["fora"]
@@ -74,9 +66,6 @@ def montar_relatorio_completo(jogo_lista, todos_os_times, qtd_jogos=5):
     resumo_casa, jogos_recentes_casa = buscar_forma_recente(id_casa, qtd_jogos)
     resumo_fora, jogos_recentes_fora = buscar_forma_recente(id_fora, qtd_jogos)
 
-    stats_casa = calcular_estatisticas_gols(jogos_recentes_casa, nome_casa)
-    stats_fora = calcular_estatisticas_gols(jogos_recentes_fora, nome_fora)
-
     match_id = buscar_id_jogo_copa(time_casa_en, time_fora_en)
     head2head = buscar_head2head(match_id) if match_id else None
 
@@ -84,6 +73,16 @@ def montar_relatorio_completo(jogo_lista, todos_os_times, qtd_jogos=5):
         jg["_resultado"] = resultado_jogo(jg, nome_casa)
     for jg in jogos_recentes_fora:
         jg["_resultado"] = resultado_jogo(jg, nome_fora)
+
+    stats_casa = calcular_estatisticas_gols(jogos_recentes_casa, nome_casa)
+    stats_fora = calcular_estatisticas_gols(jogos_recentes_fora, nome_fora)
+
+    forma_expandida_casa = calcular_forma_expandida(jogos_recentes_casa, nome_casa)
+    forma_expandida_fora = calcular_forma_expandida(jogos_recentes_fora, nome_fora)
+
+    
+    mando_casa = calcular_mandante_visitante(jogos_recentes_casa, nome_casa)
+    mando_fora = calcular_mandante_visitante(jogos_recentes_fora, nome_fora)
 
     return {
         "casa": nome_casa,
@@ -94,17 +93,22 @@ def montar_relatorio_completo(jogo_lista, todos_os_times, qtd_jogos=5):
         "commence_time": jogo_lista["commence_time"],
         "odds": resumir_odds(jogo_lista["odds_bruto"]),
         "head2head": head2head,
-        "forma": {
-            nome_casa: {
-                "resumo": resumo_casa,
-                "jogos": jogos_recentes_casa,
-                "stats_gols": stats_casa,
-            },
-            nome_fora: {
-                "resumo": resumo_fora,
-                "jogos": jogos_recentes_fora,
-                "stats_gols": stats_fora,
-            },
+        "forma": 
+        {
+                nome_casa: {
+                    "resumo": resumo_casa,
+                    "jogos": jogos_recentes_casa,
+                    "stats_gols": stats_casa,
+                    "forma_expandida": forma_expandida_casa,
+                    "mando": mando_casa,  # <- adicione
+                },
+                nome_fora: {
+                    "resumo": resumo_fora,
+                    "jogos": jogos_recentes_fora,
+                    "stats_gols": stats_fora,
+                    "forma_expandida": forma_expandida_fora,
+                    "mando": mando_fora,  # <- adicione
+                },
         },
     }
 

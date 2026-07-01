@@ -257,3 +257,101 @@ h1 {
   vertical-align: middle;
   margin: 0 4px;
 }
+.forma-stats-grade {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+  margin: 14px 0;
+}
+
+.forma-stat {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background: rgba(255,255,255,0.04);
+  border-radius: 6px;
+  padding: 8px 4px;
+}
+
+.fs-valor {
+  font-size: 1.3rem;
+  font-weight: 700;
+}
+
+.fs-label {
+  font-size: 0.65rem;
+  opacity: 0.6;
+  text-transform: uppercase;
+  margin-top: 2px;
+  text-align: center;
+}
+
+.fs-valor.verde  { color: #3B8C5A; }
+.fs-valor.amarelo { color: #D9A23B; }
+.fs-valor.vermelho { color: #B23A3A; }
+
+.sequencia-bloco {
+  font-size: 0.8rem;
+  opacity: 0.7;
+  margin-bottom: 10px;
+}
+
+.seq-badge {
+  font-weight: 700;
+  padding: 2px 8px;
+  border-radius: 4px;
+}
+
+.seq-badge.verde   { background: rgba(59,140,90,0.2);  color: #3B8C5A; }
+.seq-badge.amarelo { background: rgba(217,162,59,0.2); color: #D9A23B; }
+.seq-badge.vermelho{ background: rgba(178,58,58,0.2);  color: #B23A3A; }
+
+.secao-titulo {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  opacity: 0.5;
+  margin: 24px 0 10px;
+}
+
+.mando-grade {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  margin-top: 10px;
+}
+
+.mando-bloco {
+  background: rgba(255,255,255,0.04);
+  border-radius: 8px;
+  padding: 10px;
+}
+
+.mando-label {
+  font-size: 0.75rem;
+  opacity: 0.6;
+  margin-bottom: 8px;
+}
+
+.mando-stats {
+  font-size: 1rem;
+  font-weight: 700;
+  display: flex;
+  gap: 8px;
+  margin-bottom: 6px;
+}
+
+.mando-gols {
+  font-size: 0.75rem;
+  opacity: 0.7;
+  margin-bottom: 4px;
+}
+
+.mando-media {
+  font-size: 0.7rem;
+  opacity: 0.5;
+}
+
+.verde  { color: #3B8C5A; }
+.amarelo { color: #D9A23B; }
+.vermelho { color: #B23A3A; }

@@ -73,3 +73,68 @@ def resumir_odds(jogo):
         "odd_media_over_2_5": media(precos_over),
         "odd_media_under_2_5": media(precos_under),
     }
+
+def calcular_forma_expandida(jogos, nome_time):
+        
+    vitorias = sum(1 for j in jogos if j["_resultado"] == "V")
+    empates   = sum(1 for j in jogos if j["_resultado"] == "E")
+    derrotas  = sum(1 for j in jogos if j["_resultado"] == "D")
+
+    jogos_sem_marcar = 0
+    for j in jogos:
+        gols = j["placar_casa"] if j["casa"] == nome_time else j["placar_fora"]
+        if gols == 0:
+            jogos_sem_marcar += 1
+
+    # sequência atual: percorre do mais recente para o mais antigo
+    sequencia_atual = ""
+    if jogos:
+        ultimo = jogos[-1]["_resultado"]
+        sequencia_atual = ultimo
+        for j in reversed(jogos[:-1]):
+            if j["_resultado"] == ultimo:
+                sequencia_atual += ultimo
+            else:
+                break
+
+    total = len(jogos)
+    return {
+        "total_jogos": total,
+        "vitorias": vitorias,
+        "empates": empates,
+        "derrotas": derrotas,
+        "jogos_sem_marcar": jogos_sem_marcar,
+        "sequencia_atual": sequencia_atual,
+    }
+
+def calcular_mandante_visitante(jogos, nome_time):
+    mandante = {"jogos": 0, "vitorias": 0, "empates": 0, "derrotas": 0,
+                "gols_marcados": 0, "gols_sofridos": 0}
+    visitante = {"jogos": 0, "vitorias": 0, "empates": 0, "derrotas": 0,
+                 "gols_marcados": 0, "gols_sofridos": 0}
+
+    for jogo in jogos:
+        eh_mandante = jogo["casa"] == nome_time
+        bloco = mandante if eh_mandante else visitante
+
+        gols_marcados = jogo["placar_casa"] if eh_mandante else jogo["placar_fora"]
+        gols_sofridos = jogo["placar_fora"] if eh_mandante else jogo["placar_casa"]
+
+        bloco["jogos"] += 1
+        bloco["gols_marcados"] += gols_marcados
+        bloco["gols_sofridos"] += gols_sofridos
+
+        resultado = jogo["_resultado"]
+        if resultado == "V":
+            bloco["vitorias"] += 1
+        elif resultado == "E":
+            bloco["empates"] += 1
+        else:
+            bloco["derrotas"] += 1
+
+    for bloco in (mandante, visitante):
+        total = bloco["jogos"]
+        bloco["media_marcados"] = round(bloco["gols_marcados"] / total, 2) if total else 0
+        bloco["media_sofridos"] = round(bloco["gols_sofridos"] / total, 2) if total else 0
+
+    return {"mandante": mandante, "visitante": visitante}
